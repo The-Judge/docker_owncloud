@@ -1,13 +1,12 @@
-FROM derjudge/apache-php
+FROM derjudge/archlinux-apache-php
 MAINTAINER Marc Richter <mail@marc-richter.info>
 
-RUN apt-get update
-RUN apt-get install -y wget
+RUN yes | pacman -Syy | cat
+RUN yes | pacman -S community/owncloud \
+    ffmpeg \
+    libreoffice \
+    | cat
 
-# Add package source for oc
-RUN echo 'deb http://download.opensuse.org/repositories/isv:/ownCloud:/community/xUbuntu_14.04/ /' > /etc/apt/sources.list.d/owncloud.list
-RUN wget -O - http://download.opensuse.org/repositories/isv:ownCloud:community/xUbuntu_14.04/Release.key | apt-key add -
-RUN apt-get update
 
 # Install OwnCloud
 RUN apt-get install -y libav-tools \
