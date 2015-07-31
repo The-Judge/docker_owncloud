@@ -1,0 +1,11 @@
+#!/bin/bash
+if [ ! -e /app/core ]; then
+    rsync -a /var/www/owncloud/ /app
+fi
+
+if [ -z "${APACHE_ADMIN}" ]; then
+    export APACHE_ADMIN="webmaster@localhost"
+fi
+echo -e "\nexport APACHE_ADMIN=\"${APACHE_ADMIN}\"" >> /etc/apache2/envvars
+
+chown www-data:www-data -R /var/lib/owncloud/data
