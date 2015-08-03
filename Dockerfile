@@ -2,47 +2,29 @@ FROM derjudge/archlinux-apache-php
 MAINTAINER Marc Richter <mail@marc-richter.info>
 
 RUN yes | pacman -Syy | cat
-RUN yes | pacman -S community/owncloud \
+RUN yes | pacman -S \
     ffmpeg \
-    libreoffice \
+    libreoffice-fresh \
+    libx264 \
+    owncloud \
+    smbclient \
     | cat
 
-
-# Install OwnCloud
-RUN apt-get install -y libav-tools \
-    owncloud \
-    owncloud-app-activity \
-    owncloud-app-encryption \
-    owncloud-app-files \
-    owncloud-app-files-pdfviewer \
-    owncloud-app-files-sharing \
-    owncloud-app-files-texteditor \
-    owncloud-app-files-trashbin \
-    owncloud-app-files-versions \
-    owncloud-app-files-videoviewer \
-    owncloud-app-firstrunwizard \
-    owncloud-app-gallery \
-    owncloud-config-apache \
-    php5-imagick \
-    rsync
-
 # Make seetings
-RUN rm -f /etc/apache2/conf-enabled/owncloud.conf /etc/apache2/sites-enabled/000-default.conf
-ADD assets/apache_config.conf /etc/apache2/sites-available/owncloud.conf
-RUN ln -s ../sites-available/owncloud.conf /etc/apache2/sites-enabled/owncloud.conf
+RUN mkdir -p /etc/httpd/conf/sites-available /etc/httpd/conf/sites-enabled
+ADD assets/apache_config.conf /etc/httpd/conf/sites-available/owncloud.conf
+RUN ln -s ../sites-available/owncloud.conf /etc/httpd/conf/sites-enabled/owncloud.conf
 
 # Cronjob
-RUN rm -f /etc/php5/cli/conf.d/20-snmp.ini /etc/php5/apache2/conf.d/20-snmp.ini
-RUN if [ -f /extra/www-data.crontab ]; then crontab -u www-data /extra/www-data.crontab ; fi
-
-RUN a2enmod headers
+RUN if [ -f /extra/http.crontab ]; then crontab -u http /extra/http.crontab ; fi
 
 # Add default extra - script
-RUN mkdir /extra
+RUN if [ ! -e /extra ]; then mkdir /extra; fi
+RUN if [ ! -e /extra/init ]; then mv /extra/init /extra/init_user; fi
 ADD assets/extra/init /extra/init
-RUN chmod +x /extra/init
+RUN chmod +x /extra/init*
 
 VOLUME ["/app"]
-
 EXPOSE 80
+
 CMD ["/run.sh"]

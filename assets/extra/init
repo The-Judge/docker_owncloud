@@ -8,4 +8,9 @@ if [ -z "${APACHE_ADMIN}" ]; then
 fi
 echo -e "\nexport APACHE_ADMIN=\"${APACHE_ADMIN}\"" >> /etc/apache2/envvars
 
+if [ -e /extra/init_user ]; then
+    chmod +x /extra/init_user
+    /extra/init_user
+fi
+
 chown www-data:www-data -R /var/lib/owncloud/data
