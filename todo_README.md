@@ -1,4 +1,5 @@
 # TODO: How to use this image #
+
 docker stop owncloud mysql-owncloud ; docker rm -v owncloud mysql-owncloud
 
 docker run --name mysql-owncloud -v $(readlink -f $(dirname $0))/mysql/data:/var/lib/mysql \
