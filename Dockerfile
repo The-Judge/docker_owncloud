@@ -3,6 +3,7 @@ MAINTAINER Marc Richter <mail@marc-richter.info>
 
 RUN yes | pacman -Syy | cat
 RUN yes | pacman -S \
+    cronie \
     exiv2 \
     ffmpeg \
     libreoffice-fresh \

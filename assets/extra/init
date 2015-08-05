@@ -14,3 +14,5 @@ if [ -e /extra/init_user ]; then
 fi
 
 chown www-data:www-data -R /var/lib/owncloud/data
+
+crond
